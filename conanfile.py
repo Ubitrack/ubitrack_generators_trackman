@@ -27,12 +27,12 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
 
     def _trackman_config_lines(self, venv_name):
         script_lines = ["#trackman configuration file"]
-        script_lines.append("UbitrackComponentDirectory=%s" % os.path.join("lib", "ubitrack"))
+        script_lines.append("UbitrackComponentDirectory=%s" % os.path.join(os.getcwd(), "lib", "ubitrack"))
         script_lines.append("LastDirectory=.")
-        script_lines.append("UbitrackWrapperDirectory=%s" % os.path.join("lib"))
+        script_lines.append("UbitrackWrapperDirectory=%s" % os.path.join(os.getcwd(), "lib"))
         script_lines.append("AutoCompletePatterns=")
-        script_lines.append("PatternTemplateDirectory=%s" % os.path.join("share", "Ubitrack", "utql"))
-        script_lines.append("UbitrackLibraryDirectory=%s" % os.path.join("lib"))
+        script_lines.append("PatternTemplateDirectory=%s" % os.path.join(os.getcwd(), "share", "Ubitrack", "utql"))
+        script_lines.append("UbitrackLibraryDirectory=%s" % os.path.join(os.getcwd(), "lib"))
         return script_lines
 
     @property
