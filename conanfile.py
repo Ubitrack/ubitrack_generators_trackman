@@ -16,14 +16,24 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
         if platform.system() == "Windows":
           script_lines.append("@echo off")
           script_lines.append("activate_run.bat")
-          script_lines.append("SET CLASSPATH=%s" % deps_env_vars["TRACKMAN_LIB_PATH"])
+          script_lines.append("SET CLASSPATH=%s" % deps_env_vars["TRACKMAN_LIB_PATH"][0])
         else:
           script_lines.append("source activate_run.sh")
-          script_lines.append("export CLASSPATH=%s" % deps_env_vars["TRACKMAN_LIB_PATH"])
+          script_lines.append("export CLASSPATH=%s" % deps_env_vars["TRACKMAN_LIB_PATH"][0])
 
-        script_lines.append("java -jar %s" % os.path.join(deps_env_vars["TRACKMAN_BIN_PATH"], "trackman.jar"))
+        script_lines.append("java -jar %s" % os.path.join(deps_env_vars["TRACKMAN_BIN_PATH"][0], "trackman.jar"))
         return script_lines
 
+
+    def _trackman_config_lines(self, venv_name):
+        script_lines = ["#trackman configuration file"]
+        script_lines.append("UbitrackComponentDirectory=%s" % os.path.join("lib", "ubitrack"))
+        script_lines.append("LastDirectory=.")
+        script_lines.append("UbitrackWrapperDirectory=%s" % os.path.join("lib"))
+        script_lines.append("AutoCompletePatterns=")
+        script_lines.append("PatternTemplateDirectory=%s" % os.path.join("share", "Ubitrack", "utql"))
+        script_lines.append("UbitrackLibraryDirectory=%s" % os.path.join("lib"))
+        return script_lines
 
     @property
     def content(self):
@@ -33,10 +43,13 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
         ext = "bat" if platform.system() == "Windows" else "sh"
 
         deps_env_vars = self.conanfile.deps_env_info.vars
-        
+
         if "TRACKMAN_BIN_PATH" in deps_env_vars:
           trackman_startscript_lines = self._trackman_startscript_lines(self.venv_name)
           ret["startTrackman.%s" % ext] = os.linesep.join(trackman_startscript_lines)
+
+          trackman_config_lines = self._trackman_config_lines(self.venv_name)
+          ret["trackman.conf"] = os.linesep.join(trackman_config_lines)
 
         return ret
 
