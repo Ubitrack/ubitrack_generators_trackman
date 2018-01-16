@@ -2,15 +2,15 @@ from conans.client.generators.virtualrunenv import VirtualRunEnvGenerator
 from conans.paths import BUILD_INFO
 from conans import ConanFile, CMake
 
-class UbitrackVirtualRunEnvGenerator(VirtualRunEnvGenerator):
+class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
 
     def __init__(self, conanfile):
-        super(UbitrackVirtualRunEnvGenerator, self).__init__(conanfile)
+        super(ubitrack_virtualenv_generator, self).__init__(conanfile)
         self.venv_name = "ubitrackrunenv"
 
     @property
     def content(self):
-        ret = super(UbitrackVirtualRunEnvGenerator, self).content
+        ret = super(ubitrack_virtualenv_generator, self).content
         # add ubitrack specific scripts here
 
         return ret
@@ -18,7 +18,7 @@ class UbitrackVirtualRunEnvGenerator(VirtualRunEnvGenerator):
 
 class MyCustomGeneratorPackage(ConanFile):
     name = "ubitrack_virtualenv_generator"
-    version = "0.1"
+    version = "1.3.0"
     url = "https://github.com/Ubitrack/ubitrack_virtualenv_generator"
     license = "GPL"
 
