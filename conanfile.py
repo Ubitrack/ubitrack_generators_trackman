@@ -12,7 +12,7 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
     def _activate_lines(self, venv_name):
         ret = super(ubitrack_virtualenv_generator, self)._activate_lines(venv_name)
         if platform.system() == "Windows":
-          ret.append("SET UBITRACK_COMPONENTS_PATH=%s" % os.path.join(self.output_path, "lib", "ubitrack"))
+          ret.append("SET UBITRACK_COMPONENTS_PATH=%s" % os.path.join(self.output_path, "bin", "ubitrack"))
         else:
           ret.append("export UBITRACK_COMPONENTS_PATH=%s" % os.path.join(self.output_path, "lib", "ubitrack"))
         return ret
