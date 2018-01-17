@@ -9,6 +9,13 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
         super(ubitrack_virtualenv_generator, self).__init__(conanfile)
         self.venv_name = "ubitrackrunenv"
 
+    def _activate_lines(self, venv_name):
+        ret = super(ubitrack_virtualenv_generator, self)._activate_lines(venv_name)
+        if platform.system() == "Windows":
+          script_lines.append("SET UBITRACK_COMPONENTS_PATH=%s" % os.path.join(self.output_path, "lib", "ubitrack"))
+        else:
+          script_lines.append("export UBITRACK_COMPONENTS_PATH=%s" % os.path.join(self.output_path, "lib", "ubitrack"))
+        return ret
 
     def _trackman_startscript_lines(self, venv_name):
         script_lines = self._activate_lines(venv_name)
