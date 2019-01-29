@@ -17,7 +17,6 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
             items['UBITRACK_COMPONENTS_PATH'] = os.path.join(self.output_path, "lib", "ubitrack")
 
         deps_env_vars = self.conanfile.deps_env_info.vars
-        print(str(self.conanfile.deps_env_info))
         for key, v in deps_env_vars.items():
             if key == "TRACKMAN_BIN_PATH":
               items["CLASSPATH"] = v[0]
