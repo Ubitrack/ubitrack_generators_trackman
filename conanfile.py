@@ -39,11 +39,11 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
         return items.items()
 
     def _sh_lines(self):
-        activate_lines, deactivate_lines = super(ubitrack_virtualenv_generator, self)._sh_lines()
+        activate_lines, deactivate_lines, envfile = super(ubitrack_virtualenv_generator, self)._sh_lines()
 
         variables = self.ubitrack_env_items()
         
-        for name, activate, deactivate in self.format_values("sh", variables):
+        for name, activate, deactivate in self._format_values("sh", variables):
             activate_lines.append("%s=%s" % (name, activate))
             activate_lines.append("export %s" % name)
             if deactivate == '""':
@@ -54,32 +54,32 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
         activate_lines.append('')
         deactivate_lines.append('')
 
-        return activate_lines, deactivate_lines
+        return activate_lines, deactivate_lines, envfile
 
     def _cmd_lines(self):
-        activate_lines, deactivate_lines = super(ubitrack_virtualenv_generator, self)._cmd_lines()
+        activate_lines, deactivate_lines, envfile = super(ubitrack_virtualenv_generator, self)._cmd_lines()
 
         variables = self.ubitrack_env_items()
 
-        for name, activate, deactivate in self.format_values("cmd", variables):
+        for name, activate, deactivate in self._format_values("cmd", variables):
             activate_lines.append("SET %s=%s" % (name, activate))
             deactivate_lines.append("SET %s=%s" % (name, deactivate))
         activate_lines.append('')
         deactivate_lines.append('')
 
-        return activate_lines, deactivate_lines
+        return activate_lines, deactivate_lines, envfile
 
     def _ps1_lines(self):
-        activate_lines, deactivate_lines = super(ubitrack_virtualenv_generator, self)._ps1_lines()
+        activate_lines, deactivate_lines, envfile = super(ubitrack_virtualenv_generator, self)._ps1_lines()
 
         variables = self.ubitrack_env_items()
 
-        for name, activate, deactivate in self.format_values("ps1", variables):
+        for name, activate, deactivate in self._format_values("ps1", variables):
             activate_lines.append('$env:%s = %s' % (name,activate))
             deactivate_lines.append('$env:%s = %s' % (name,deactivate))
         activate_lines.append('')
 
-        return activate_lines, deactivate_lines
+        return activate_lines, deactivate_lines, envfile
 
     def _trackman_config_lines(self):
         config_lines = []
@@ -103,20 +103,20 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
 
 
             if os_info.is_windows and not os_info.is_posix:
-                script_lines, _ = self._cmd_lines()
-                for name, activate, deactivate in self.format_values("cmd", trackman_items.items()):
+                script_lines, _, _ = self._cmd_lines()
+                for name, activate, deactivate in self._format_values("cmd", trackman_items.items()):
                     script_lines.append("SET %s=%s" % (name, activate))
                 script_lines.append("java -jar %s" % os.path.join(deps_env_vars["TRACKMAN_BIN_PATH"][0], "trackman.jar"))
                 result["startTrackman.bat"] = os.linesep.join(script_lines)
 
-                script_lines, _ = self._ps1_lines()
+                script_lines, _, _ = self._ps1_lines()
                 for name, activate, deactivate in self.format_values("cmd", trackman_items.items()):
                     script_lines.append("SET %s=%s" % (name, activate))
                 script_lines.append("java -jar %s" % os.path.join(deps_env_vars["TRACKMAN_BIN_PATH"][0], "trackman.jar"))
                 result["startTrackman.ps1"] = os.linesep.join(script_lines)
 
             if os_info.is_posix:
-                script_lines, _ = self._sh_lines()
+                script_lines, _, _ = self._sh_lines()
                 for name, activate, deactivate in self.format_values("sh", trackman_items.items()):
                     script_lines.append("%s=%s" % (name, activate))
                     script_lines.append("export %s" % name)
