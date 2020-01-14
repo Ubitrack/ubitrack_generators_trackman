@@ -110,14 +110,14 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
                 result["startTrackman.bat"] = os.linesep.join(script_lines)
 
                 script_lines, _, _ = self._ps1_lines()
-                for name, activate, deactivate in self.format_values("cmd", trackman_items.items()):
+                for name, activate, deactivate in self._format_values("cmd", trackman_items.items()):
                     script_lines.append("SET %s=%s" % (name, activate))
                 script_lines.append("java -jar %s" % os.path.join(deps_env_vars["TRACKMAN_BIN_PATH"][0], "trackman.jar"))
                 result["startTrackman.ps1"] = os.linesep.join(script_lines)
 
             if os_info.is_posix:
                 script_lines, _, _ = self._sh_lines()
-                for name, activate, deactivate in self.format_values("sh", trackman_items.items()):
+                for name, activate, deactivate in self._format_values("sh", trackman_items.items()):
                     script_lines.append("%s=%s" % (name, activate))
                     script_lines.append("export %s" % name)
                 script_lines.append("java -jar %s" % os.path.join(deps_env_vars["TRACKMAN_BIN_PATH"][0], "trackman.jar"))
