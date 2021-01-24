@@ -1,5 +1,6 @@
 from conans.client.generators.virtualrunenv import VirtualRunEnvGenerator
 from conans.client.run_environment import RunEnvironment
+from conans.client.envvars.environment import _format_values
 from conans import ConanFile, CMake
 from conans.tools import os_info
 import os
@@ -84,7 +85,7 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
             if os_info.is_windows and not os_info.is_posix:
                 flavor = "cmd"
                 environment_filename = "environment{}.{}.env".format(self.suffix, flavor)
-                ret = list(self._format_values(flavor, self.env.items()))
+                ret = list(_format_values(flavor, self.env.items(), self.append_with_spaces))
                 modified_vars = [name for name, _, existing in ret if existing]
                 new_vars = [name for name, _, existing in ret if not existing]
 
@@ -97,7 +98,7 @@ class ubitrack_virtualenv_generator(VirtualRunEnvGenerator):
             if os_info.is_posix:
                 flavor = "sh"
                 environment_filename = "environment{}.{}.env".format(self.suffix, flavor)
-                ret = list(self._format_values(flavor, self.env.items()))
+                ret = list(_format_values(flavor, self.env.items(), self.append_with_spaces))
                 modified_vars = [name for name, _, existing in ret if existing]
                 new_vars = [name for name, _, existing in ret if not existing]
 
